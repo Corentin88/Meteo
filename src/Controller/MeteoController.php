@@ -10,6 +10,8 @@ use Psr\Log\LoggerInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\WeatherData;
 
 class MeteoController extends AbstractController
 {
@@ -17,35 +19,32 @@ class MeteoController extends AbstractController
     private string $apiKey;
     private LoggerInterface $logger;
     private CacheInterface $cache;
+    private EntityManagerInterface $entityManager;
 
-    public function __construct(HttpClientInterface $client, LoggerInterface $logger, CacheInterface $cache)
-    {
+    public function __construct(
+        HttpClientInterface $client,
+        LoggerInterface $logger,
+        CacheInterface $cache,
+        EntityManagerInterface $entityManager
+    ) {
         $this->client = $client;
-        $this->apiKey = $_ENV['RAPIDAPI_KEY']; // Charge la clé API depuis .env
+        $this->apiKey = $_ENV['RAPIDAPI_KEY'];
         $this->logger = $logger;
         $this->cache = $cache;
+        $this->entityManager = $entityManager;
     }
 
     #[Route('/meteo', name: 'meteo')]
     public function index(Request $request): Response
     {
         try {
-            $ville = $request->query->get('ville', 'Xertigny'); // Par défaut Xertigny si aucune ville n'est fournie
+            $ville = $request->query->get('ville', 'Xertigny');
             $cacheKey = 'weather_data_' . strtolower($ville);
-            // Vérifier si les données sont en cache
+
             $weatherData = $this->cache->get($cacheKey, function (ItemInterface $item) use ($ville) {
-                // Si les données ne sont pas en cache, on effectue la requête API
-                $item->expiresAfter(43200); // Expire après 1 heure (3600 secondes)
+                $item->expiresAfter(43200);
+                $url = 'https://ai-weather-by-meteosource.p.rapidapi.com/daily?place_id=' . urlencode($ville);
 
-                // Coordonnées géographiques de Xertigny
-                // $latitude = 48.2719;
-                // $longitude = 6.4822;
-                // $place = 'Xertigny'; // Nom de la ville
-
-                // Construire l'URL de la requête avec les paramètres
-                $url = 'https://ai-weather-by-meteosource.p.rapidapi.com/daily?place_id=' . urlencode($ville) . '&language=fr&units=auto';
-
-                // Requête HTTP vers l'API avec le token dans les en-têtes
                 $response = $this->client->request('GET', $url, [
                     'headers' => [
                         'x-rapidapi-host' => 'ai-weather-by-meteosource.p.rapidapi.com',
@@ -53,74 +52,85 @@ class MeteoController extends AbstractController
                     ]
                 ]);
 
-                // Récupérer les données de la réponse
-                return $response->toArray(); // Convertir la réponse en tableau
+                return $response->toArray();
             });
-            
-            // Extraire les prévisions quotidiennes
-            $dailyData = $weatherData['daily']['data'] ?? []; // Si 'data' existe, récupérer les prévisions
-            $todayWeather = $dailyData[0] ?? null;
 
-            // Format heure Française
-            $formatter = new \IntlDateFormatter(
-                'fr_FR',  // Locale en français
-                \IntlDateFormatter::FULL,  // Format long (ex : lundi 1 mars 2025)
-                \IntlDateFormatter::NONE   // Pas d'heure affichée
-            );
+            $dailyData = $weatherData['daily']['data'] ?? [];
 
-            // Formatage de la date pour todayWeather
-            $todayDate = new \DateTime($todayWeather['day'] ?? 'N/A');
-            $todayWeather['formattedDay'] = ucfirst($formatter->format($todayDate)); //ucfirts ajoute une Majuscule au jour.
+            // Créer le formatteur de date une seule fois
+            $formatter = new \IntlDateFormatter('fr_FR', \IntlDateFormatter::FULL, \IntlDateFormatter::NONE);
 
+            // Supprimer toutes les données existantes pour cette ville
+            $existingData = $this->entityManager->getRepository(WeatherData::class)
+                ->findBy(['city' => $ville]);
 
-            // Formatage des dates pour dailyData
-            foreach ($dailyData as &$day) {
-                $date = new \DateTime($day['day'] ?? 'N/A');
-                $day['formattedDay'] = ucfirst($formatter->format($date));  // Ajouter la date formatée à chaque jour
+            foreach ($existingData as $data) {
+                $this->entityManager->remove($data);
             }
 
-            // Définir les variables à passer à la vue
-            $day = $todayWeather['formattedDay'];
-            $weather = $todayWeather['weather'] ?? 'N/A';  // Vérifie que 'weather' est bien dans les données
-            $icon = $todayWeather['icon'] ?? '';  // Vérifie que 'icon' est bien dans les données
-            $summary = $todayWeather['summary'] ?? 'N/A';
-            $temperature = $todayWeather['temperature'] ?? 'N/A';
-            $temperatureMin = $todayWeather['temperature_min'] ?? 'N/A';
-            $temperatureMax = $todayWeather['temperature_max'] ?? 'N/A';
-            $feelsLike = $todayWeather['feels_like'] ?? 'N/A';
-            $windSpeed = $todayWeather['wind']['speed'] ?? 'N/A';  // Données sur le vent dans 'wind'
-            $precipitationType = $todayWeather['precipitation']['type'] ?? 'N/A';  // Type de précipitation
-            $probabilityPrecipitation = $todayWeather['probability']['precipitation'] ?? 'N/A';  // Probabilité de précipitation
-            $probabilityStorm = $todayWeather['probability']['storm'] ?? 'N/A';  // Probabilité de tempête
-            $probabilityFreeze = $todayWeather['probability']['freeze'] ?? 'N/A';  // Probabilité de gel
-            $humidity = $todayWeather['humidity'] ?? 'N/A';
+            // Créer une entité pour chaque jour
+            foreach ($dailyData as $dayData) {
+                $weatherDataEntity = new WeatherData();
 
+                $date = new \DateTime($dayData['day'] ?? 'N/A');
+                $formattedDay = ucfirst($formatter->format($date));
 
-            // Passer les données à la vue Twig
+                $weatherDataEntity->setCity($ville);
+                $weatherDataEntity->setDay($formattedDay);
+                $weatherDataEntity->setWeather($dayData['weather']);
+                $weatherDataEntity->setIcon($dayData['icon']);
+                $weatherDataEntity->setSummary($dayData['summary']);
+                $weatherDataEntity->setTemperature($dayData['temperature']);
+                $weatherDataEntity->setTemperatureMin($dayData['temperature_min']);
+                $weatherDataEntity->setTemperatureMax($dayData['temperature_max']);
+                $weatherDataEntity->setFeelsLike($dayData['feels_like']);
+                $weatherDataEntity->setWindSpeed($dayData['wind']['speed']);
+                $weatherDataEntity->setPrecipitationType($dayData['precipitation']['type']);
+                $weatherDataEntity->setProbabilityPrecipitation($dayData['probability']['precipitation']);
+                $weatherDataEntity->setProbabilityStorm($dayData['probability']['storm']);
+                $weatherDataEntity->setProbabilityFreeze($dayData['probability']['freeze']);
+                $weatherDataEntity->setHumidity($dayData['humidity']);
+
+                $this->entityManager->persist($weatherDataEntity);
+            }
+
+            $this->entityManager->flush();
+
+            // Récupérer les données pour le premier jour pour l'affichage
+            $todayWeather = $dailyData[0] ?? null;
+
+            // Formater la date pour le premier jour
+            if ($todayWeather) {
+                $date = new \DateTime($todayWeather['day'] ?? 'N/A');
+                $todayWeather['formattedDay'] = ucfirst($formatter->format($date));
+            }
+
+            // Formater les dates pour les autres jours
+            foreach ($dailyData as &$day) {
+                $date = new \DateTime($day['day'] ?? 'N/A');
+                $day['formattedDay'] = ucfirst($formatter->format($date));
+            }
+
             return $this->render('meteo/index.html.twig', [
                 'ville' => $ville,
-                'day' => $day,
-                'weather' => $weather,
-                'icon' => $icon,  // Assurez-vous que cette variable est bien passée à la vue
-                'summary' => $summary,
-                'temperature' => $temperature,
-                'temperatureMin' => $temperatureMin,
-                'temperatureMax' => $temperatureMax,
-                'feelsLike' => $feelsLike,
-                'windSpeed' => $windSpeed,
-                'precipitationType' => $precipitationType,
-                'probabilityPrecipitation' => $probabilityPrecipitation,
-                'probabilityStorm' => $probabilityStorm,
-                'probabilityFreeze' => $probabilityFreeze,
-                'humidity' => $humidity,
-                'dailyData' => array_slice($dailyData, 1, 6), // Météo pour les jours suivants
-                'errorMessage' => null, // Ajoutez cette ligne pour éviter l'erreur
-
+                'day' => $todayWeather ? $todayWeather['formattedDay'] : '',
+                'weather' => $todayWeather ? $todayWeather['weather'] : '',
+                'icon' => $todayWeather ? $todayWeather['icon'] : '',
+                'summary' => $todayWeather ? $todayWeather['summary'] : '',
+                'temperature' => $todayWeather ? $todayWeather['temperature'] : null,
+                'temperatureMin' => $todayWeather ? $todayWeather['temperature_min'] : null,
+                'temperatureMax' => $todayWeather ? $todayWeather['temperature_max'] : null,
+                'feelsLike' => $todayWeather ? $todayWeather['feels_like'] : null,
+                'windSpeed' => $todayWeather ? $todayWeather['wind']['speed'] : null,
+                'precipitationType' => $todayWeather ? $todayWeather['precipitation']['type'] : '',
+                'probabilityPrecipitation' => $todayWeather ? $todayWeather['probability']['precipitation'] : null,
+                'probabilityStorm' => $todayWeather ? $todayWeather['probability']['storm'] : null,
+                'probabilityFreeze' => $todayWeather ? $todayWeather['probability']['freeze'] : null,
+                'humidity' => $todayWeather ? $todayWeather['humidity'] : null,
+                'dailyData' => array_slice($dailyData, 1, 6)
             ]);
         } catch (\Exception $e) {
-            // Log l'erreur en cas de problème avec l'API
             $this->logger->error('Erreur API : ' . $e->getMessage());
-
             return new Response('Erreur lors de la récupération des données météo : ' . $e->getMessage(), 500);
         }
     }

@@ -12,53 +12,66 @@ class WeatherData
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    public ?int $id = null;
+    private ?int $id = null;
 
     #[ORM\Column(length: 50)]
-    public ?string $day = null;
+    private ?string $city = null;
+
+    #[ORM\Column(length: 50)]
+    private ?string $day = null;
 
     #[ORM\Column(length: 100, nullable: true)]
-    public ?string $weather = null;
+    private ?string $weather = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    public ?string $icon = null;
+    private ?string $icon = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    public ?string $summary = null;
+    private ?string $summary = null;
 
     #[ORM\Column(type: 'float', nullable: true)]
-    public ?float $temperature = null;
+    private ?float $temperature = null;
 
     #[ORM\Column(type: 'float', nullable: true)]
-    public ?float $temperatureMin = null;
+    private ?float $temperatureMin = null;
 
     #[ORM\Column(type: 'float', nullable: true)]
-    public ?float $temperatureMax = null;
+    private ?float $temperatureMax = null;
 
     #[ORM\Column(type: 'float', nullable: true)]
-    public ?float $feelsLike = null;
+    private ?float $feelsLike = null;
 
     #[ORM\Column(type: 'float', nullable: true)]
-    public ?float $windSpeed = null;
+    private ?float $windSpeed = null;
 
     #[ORM\Column(length: 50, nullable: true)]
-    public ?string $precipitationType = null;
+    private ?string $precipitationType = null;
 
     #[ORM\Column(type: 'float', nullable: true)]
-    public ?float $probabilityPrecipitation = null;
+    private ?float $probabilityPrecipitation = null;
 
     #[ORM\Column(type: 'float', nullable: true)]
-    public ?float $probabilityStorm = null;
+    private ?float $probabilityStorm = null;
 
     #[ORM\Column(type: 'float', nullable: true)]
-    public ?float $probabilityFreeze = null;
+    private ?float $probabilityFreeze = null;
 
     #[ORM\Column(type: 'float', nullable: true)]
-    public ?float $humidity = null;
+    private ?float $humidity = null;
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getCity(): ?string
+    {
+        return $this->city;
+    }
+    public function setCity(string $city): self
+    {
+        $this->city = $city;
+        return $this;
     }
 
     public function getDay(): ?string
