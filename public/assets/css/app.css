@@ -1,0 +1,61 @@
+body {
+    background-color: skyblue;
+}
+/* Style pour la météo du jour */
+.weather-today {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px; /* Espace entre les cards */
+    margin-top: 40px;
+}
+/* Style pour la section de la semaine */
+.weather-week {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px; /* Espace entre les cards */
+    margin-top: 40px;
+}
+
+/* Style pour chaque card de la semaine */
+.weather-card {
+    width: 300px; /* Fixe la largeur des cards */
+    height: 350px; /* Fixe la hauteur des cards pour les uniformiser */
+    padding: 15px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Assure une distribution uniforme du contenu */
+    box-sizing: border-box; /* Inclut le padding et la bordure dans la taille de l'élément */
+    overflow-y: auto; /* Ajoute une barre de défilement si le contenu dépasse */
+}
+
+/* Optionnel : Ajouter des styles pour les titres */
+.weather-card h3 {
+    color: #007BFF;
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+/* Optionnel : Ajouter un fond pour les jours */
+.weather-week .weather-card:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* Si vous voulez que la card d'aujourd'hui soit bien centrée et plus grande : */
+.weather-today {
+    width: 100%;  /* Rendre la carte plus large */
+    max-width: 1000px; /* Limite la largeur */
+    margin-top: 20px;
+    height: 350px; /* Même taille que les autres cards */
+}
+.icon {
+    width: 90px !important;  
+    height: auto !important;  /* Garde le ratio de l'image */
+    display: block; /* Assure que l'image ne soit pas affectée par un éventuel display inline */
+    margin: 0 auto; /* Centre l'image */
+}
