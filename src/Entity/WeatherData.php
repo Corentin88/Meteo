@@ -12,58 +12,58 @@ class WeatherData
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private ?int $id = null;
+    public ?int $id = null;
 
     #[ORM\Column(length: 50)]
-    private ?string $day = null;
+    public ?string $day = null;
 
     #[ORM\Column(length: 100, nullable: true)]
-    private ?string $weather = null;
+    public ?string $weather = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $icon = null;
+    public ?string $icon = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $summary = null;
+    public ?string $summary = null;
 
     #[ORM\Column(type: 'float', nullable: true)]
-    private ?float $temperature = null;
+    public ?float $temperature = null;
 
     #[ORM\Column(type: 'float', nullable: true)]
-    private ?float $temperatureMin = null;
+    public ?float $temperatureMin = null;
 
     #[ORM\Column(type: 'float', nullable: true)]
-    private ?float $temperatureMax = null;
+    public ?float $temperatureMax = null;
 
     #[ORM\Column(type: 'float', nullable: true)]
-    private ?float $feelsLike = null;
+    public ?float $feelsLike = null;
 
     #[ORM\Column(type: 'float', nullable: true)]
-    private ?float $windSpeed = null;
+    public ?float $windSpeed = null;
 
     #[ORM\Column(length: 50, nullable: true)]
-    private ?string $precipitationType = null;
+    public ?string $precipitationType = null;
 
     #[ORM\Column(type: 'float', nullable: true)]
-    private ?float $probabilityPrecipitation = null;
+    public ?float $probabilityPrecipitation = null;
 
     #[ORM\Column(type: 'float', nullable: true)]
-    private ?float $probabilityStorm = null;
+    public ?float $probabilityStorm = null;
 
     #[ORM\Column(type: 'float', nullable: true)]
-    private ?float $probabilityFreeze = null;
+    public ?float $probabilityFreeze = null;
 
     #[ORM\Column(type: 'float', nullable: true)]
-    private ?float $humidity = null;
+    public ?float $humidity = null;
 
     public function getId(): ?int
     {
-        return $id;
+        return $this->id;
     }
 
     public function getDay(): ?string
     {
-        return $day;
+        return $this->day;
     }
 
     public function setDay(string $day): self
@@ -74,7 +74,7 @@ class WeatherData
 
     public function getWeather(): ?string
     {
-        return $weather;
+        return $this->weather;
     }
 
     public function setWeather(?string $weather): self
@@ -85,7 +85,7 @@ class WeatherData
 
     public function getIcon(): ?string
     {
-        return $icon;
+        return $this->icon;
     }
 
     public function setIcon(?string $icon): self
@@ -96,7 +96,7 @@ class WeatherData
 
     public function getSummary(): ?string
     {
-        return $summary;
+        return $this->summary;
     }
 
     public function setSummary(?string $summary): self
@@ -107,7 +107,7 @@ class WeatherData
 
     public function getTemperature(): ?float
     {
-        return $temperature;
+        return $this->temperature;
     }
 
     public function setTemperature(?float $temperature): self
@@ -118,7 +118,7 @@ class WeatherData
 
     public function getTemperatureMin(): ?float
     {
-        return $temperatureMin;
+        return $this->temperatureMin;
     }
 
     public function setTemperatureMin(?float $temperatureMin): self
@@ -129,7 +129,7 @@ class WeatherData
 
     public function getTemperatureMax(): ?float
     {
-        return $temperatureMax;
+        return $this->temperatureMax;
     }
 
     public function setTemperatureMax(?float $temperatureMax): self
@@ -140,7 +140,7 @@ class WeatherData
 
     public function getFeelsLike(): ?float
     {
-        return $feelsLike;
+        return $this->feelsLike;
     }
 
     public function setFeelsLike(?float $feelsLike): self
@@ -151,7 +151,7 @@ class WeatherData
 
     public function getWindSpeed(): ?float
     {
-        return $windSpeed;
+        return $this->windSpeed;
     }
 
     public function setWindSpeed(?float $windSpeed): self
@@ -162,7 +162,7 @@ class WeatherData
 
     public function getPrecipitationType(): ?string
     {
-        return $precipitationType;
+        return $this->precipitationType;
     }
 
     public function setPrecipitationType(?string $precipitationType): self
@@ -173,7 +173,7 @@ class WeatherData
 
     public function getProbabilityPrecipitation(): ?float
     {
-        return $probabilityPrecipitation;
+        return $this->probabilityPrecipitation;
     }
 
     public function setProbabilityPrecipitation(?float $probabilityPrecipitation): self
@@ -184,7 +184,7 @@ class WeatherData
 
     public function getProbabilityStorm(): ?float
     {
-        return $probabilityStorm;
+        return $this->probabilityStorm;
     }
 
     public function setProbabilityStorm(?float $probabilityStorm): self
@@ -195,7 +195,7 @@ class WeatherData
 
     public function getProbabilityFreeze(): ?float
     {
-        return $probabilityFreeze;
+        return $this->probabilityFreeze;
     }
 
     public function setProbabilityFreeze(?float $probabilityFreeze): self
@@ -206,7 +206,7 @@ class WeatherData
 
     public function getHumidity(): ?float
     {
-        return $humidity;
+        return $this->humidity;
     }
 
     public function setHumidity(?float $humidity): self
