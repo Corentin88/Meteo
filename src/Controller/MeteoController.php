@@ -38,12 +38,12 @@ class MeteoController extends AbstractController
     public function index(Request $request): Response
     {
         try {
-            $ville = $request->query->get('ville', 'Xertigny');
+            $ville = $request->query->get('ville', 'Epinal');
             $cacheKey = 'weather_data_' . strtolower($ville);
 
             $weatherData = $this->cache->get($cacheKey, function (ItemInterface $item) use ($ville) {
                 $item->expiresAfter(43200);
-                $url = 'https://ai-weather-by-meteosource.p.rapidapi.com/daily?place_id=' . urlencode($ville);
+                $url = 'https://ai-weather-by-meteosource.p.rapidapi.com/daily?place_id=' . urlencode($ville) . '&language=fr&units=metric';
 
                 $response = $this->client->request('GET', $url, [
                     'headers' => [
@@ -95,6 +95,42 @@ class MeteoController extends AbstractController
             }
 
             $this->entityManager->flush();
+            // Envoi des données météo à n8n via Webhook
+            try {
+                $n8nWebhookUrl = 'https://n8n.digicomm.fr/webhook-test/meteo';
+
+                // Envoi des données à n8n
+                $this->client->request('GET', $n8nWebhookUrl, [
+                    'json' => [
+                        'city' => $ville,
+                        'days' => array_map(function ($dayData, $index) {
+                            // Calculer la date en ajoutant le nombre de jours
+                            $date = new \DateTime();
+                            $date->modify('+ ' . $index . ' days');
+
+                            return [
+                                'date' => $date->format('d-m-Y'),
+                                'temperature' => $dayData['temperature'] ?? null,
+                                'temperatureMin' => $dayData['temperature_min'] ?? null,
+                                'temperatureMax' => $dayData['temperature_max'] ?? null,
+                                'condition' => $dayData['weather'] ?? null,
+                                'summary' => $dayData['summary'] ?? null,
+                                'icon' => 'http://127.0.0.1:8000/assets/icons/weather_icons/set01/small/' . ($dayData['icon'] ?? 'default') . '.png',
+                                'feelsLike' => $dayData['feels_like'] ?? null,
+                                'windSpeed' => $dayData['wind']['speed'] ?? null,
+                                'precipitationType' => $dayData['precipitation']['type'] ?? null,
+                                'probabilityPrecipitation' => $dayData['probability']['precipitation'] ?? null,
+                                'probabilityStorm' => $dayData['probability']['storm'] ?? null,
+                                'probabilityFreeze' => $dayData['probability']['freeze'] ?? null,
+                                'humidity' => $dayData['humidity'] ?? null,
+                            ];
+                        }, $dailyData, array_keys($dailyData))
+                    ]
+                ]);
+            } catch (\Exception $e) {
+                $this->logger->error('Erreur lors de l\'envoi des données à n8n: ' . $e->getMessage());
+                // Ne pas bloquer l'affichage de la page
+            }
 
             // Récupérer les données pour le premier jour pour l'affichage
             $todayWeather = $dailyData[0] ?? null;
