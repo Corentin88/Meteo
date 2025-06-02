@@ -72,11 +72,10 @@ class MeteoController extends AbstractController
             foreach ($dailyData as $dayData) {
                 $weatherDataEntity = new WeatherData();
 
-                $date = new \DateTime($dayData['day'] ?? 'N/A');
-                $formattedDay = ucfirst($formatter->format($date));
+                $date = $dayData['day'] instanceof \DateTimeInterface ? $dayData['day'] : new \DateTime('now');
 
                 $weatherDataEntity->setCity($ville);
-                $weatherDataEntity->setDay($formattedDay);
+                $weatherDataEntity->setDay($date);
                 $weatherDataEntity->setWeather($dayData['weather']);
                 $weatherDataEntity->setIcon($dayData['icon']);
                 $weatherDataEntity->setSummary($dayData['summary']);
@@ -97,7 +96,7 @@ class MeteoController extends AbstractController
             $this->entityManager->flush();
             // Envoi des données météo à n8n via Webhook
             try {
-                $n8nWebhookUrl = 'https://n8n.digicomm.fr/webhook-test/meteo';
+                $n8nWebhookUrl = 'http://localhost:5678/webhook-test/meteo';
 
                 // Envoi des données à n8n
                 $this->client->request('GET', $n8nWebhookUrl, [

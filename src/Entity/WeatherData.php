@@ -17,8 +17,8 @@ class WeatherData
     #[ORM\Column(length: 50)]
     private ?string $city = null;
 
-    #[ORM\Column(length: 50)]
-    private ?string $day = null;
+    #[ORM\Column(type: 'date')]
+    private ?\DateTimeInterface $day = null;
 
     #[ORM\Column(length: 100, nullable: true)]
     private ?string $weather = null;
@@ -74,12 +74,12 @@ class WeatherData
         return $this;
     }
 
-    public function getDay(): ?string
+    public function getDay(): ?\DateTimeInterface
     {
         return $this->day;
     }
 
-    public function setDay(string $day): self
+    public function setDay(\DateTimeInterface $day): self
     {
         $this->day = $day;
         return $this;
