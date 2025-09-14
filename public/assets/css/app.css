@@ -120,11 +120,30 @@ h1,h2{
 }
 
 .temp-cold{
-    color: rgb(56, 135, 169);
+    color: rgb(98, 204, 249);
 }
 .temp-warm{
     color: rgb(17, 164, 17);
 }
 .temp-hot{
     color: rgb(238, 93, 15);
+}
+
+button{
+border-radius: 5px;   
+background-color: #007BFF; 
+border: none;
+padding: 10px 15px;
+font-weight: bold;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+button:hover{
+    background-color: #3947df;
+}
+input{
+    border-radius: 5px;
+    border: none;
+    padding: 10px 15px;
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
