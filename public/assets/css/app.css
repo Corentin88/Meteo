@@ -6,7 +6,20 @@ body {
 h1,h2{
     font-size: 3rem;
     text-align: center;
-    text-decoration: underline;
+    font-weight: bold;
+    font-family: 'Pacifico', sans-serif;
+    background-color: #ffffff;
+    padding: 10px 20px;      /* Espacement entre le texte et le cadre */
+    display: inline-block;    /* Pour que le cadre s’adapte au texte */
+    border-radius: 10px;      /* Coins arrondis (optionnel) */
+    margin: 20px ;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Ombre pour donner un effet de profondeur */
+
+}
+.containerTitle{
+    display: flex;
+    justify-content: center;
+    
 }
 .temperature{
     font-size: 3rem;    

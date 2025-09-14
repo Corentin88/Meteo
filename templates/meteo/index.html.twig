@@ -35,9 +35,10 @@
             </form>
         </div>
     </div>
-
-    {# Section météo du jour #}
-    <h1>Météo du jour pour {{ ville|e('html')|capitalize }}</h1>
+    <div class="containerTitle">
+        {# Section météo du jour #}
+        <h1>Météo du jour pour {{ ville|e('html')|capitalize }}</h1>
+    </div>
     {# 
         Explication des filtres :
         - ville|e('html') : Échappe le contenu de la variable 'ville' pour une utilisation sûre en HTML
@@ -78,9 +79,11 @@
             </div>
         </div>
     </div>
-
+    
+    <div class="containerTitle">
     {# Section des prévisions sur 7 jours #}
     <h2>Prévisions pour la semaine :</h2>
+    </div>
     <div class="weather-week">
         {% for day in dailyData %}
             {# 
