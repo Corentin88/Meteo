@@ -99,6 +99,7 @@ h1,h2{
     color: #007BFF; /* Bleu clair (accentué) */
     font-size: 1.2em; /* Taille du texte un peu plus grande */
     margin-bottom: 10px; /* Espace en dessous du titre */
+    font-weight: bold;
 }
 
 /* 🌗 Style optionnel : fond alterné sur une carte sur deux pour la lisibilité */
@@ -120,10 +121,10 @@ h1,h2{
 }
 
 .temp-cold{
-    color: rgb(98, 204, 249);
+    color: rgb(0, 102, 204);
 }
 .temp-warm{
-    color: rgb(17, 164, 17);
+    color: rgb(0, 120, 0);
 }
 .temp-hot{
     color: rgb(238, 93, 15);

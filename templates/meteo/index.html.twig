@@ -47,7 +47,7 @@
     
     <div class="weather-today">
         <div class="weather-cardToday">
-            <h3><span class="value">{{ day|e('html') }}</span></h3>
+            <h3 aria-level="2"><span class="value">{{ day|e('html') }}</span></h3>
             {# 
                 Affichage de l'icône météo avec gestion sécurisée :
                 - asset() : Génère une URL vers un fichier dans le dossier public/
@@ -56,7 +56,7 @@
                 - alt="{{ weather|e('html_attr') }}" : Échappe pour un attribut HTML
             #}
             <img class="icon" 
-                 src="{{ asset('assets/icons/weather_icons/set01/small/' ~ icon|e('url') ~ '.png') }}" 
+                 src="{{ asset('assets/icons/weather_icons/set01/big/' ~ icon|e('url') ~ '.png') }}" 
                  alt="{{ weather|e('html_attr') }}">
             
             {# Affichage des données météo principales avec échappement HTML #}
@@ -102,7 +102,7 @@
                     Note : 'day.icon' fait référence à la clé 'icon' du tableau day, pas à la variable icon globale
                 #}
                 <img class="icon" 
-                     src="{{ asset('assets/icons/weather_icons/set01/small/' ~ day.icon|e('url') ~ '.png') }}" 
+                     src="{{ asset('assets/icons/weather_icons/set01/big/' ~ day.icon|e('url') ~ '.png') }}" 
                      alt="{{ day.weather|default(weather)|e('html_attr') }}">
                 
                 {# 

@@ -37,9 +37,17 @@ class MeteoController extends AbstractController
     #[Route('/', name: 'meteo')]
     public function index(Request $request): Response
     {
+        $ville = $request->query->get('ville', 'Epinal');
+        
+        // Créer la réponse
+        $response = new Response();
+        
+        // Autoriser l'indexation par les moteurs de recherche
+        $response->headers->set('X-Robots-Tag', 'index, follow');
+        
         try {
             // Récupération et nettoyage de la ville
-            $ville = trim($request->query->get('ville', 'Epinal'));
+            $ville = trim($ville);
             // Nettoie la ville : supprime les balises HTML et échappe les caractères spéciaux
             $ville = htmlspecialchars($ville, ENT_QUOTES, 'UTF-8');
             // Validation : uniquement des lettres, espaces, tirets et apostrophes
@@ -144,6 +152,7 @@ class MeteoController extends AbstractController
                 $day['formattedDay'] = ucfirst($formatter->format($date));
             }
 
+            // Rendre la vue avec la réponse
             return $this->render('meteo/index.html.twig', [
                 'ville' => $ville,
                 'day' => $todayWeather ? $todayWeather['formattedDay'] : '',
@@ -161,7 +170,7 @@ class MeteoController extends AbstractController
                 'probabilityFreeze' => $todayWeather ? $todayWeather['probability']['freeze'] : null,
                 'humidity' => $todayWeather ? $todayWeather['humidity'] : null,
                 'dailyData' => array_slice($dailyData, 1, 6)
-            ]);
+            ], $response);
         } catch (\Exception $e) {
             $this->logger->error('Erreur API : ' . $e->getMessage());
             $this->addFlash('error', 'Erreur lors de la récupération des données météo : ' . $e->getMessage());
