@@ -64,11 +64,11 @@
                 Les valeurs numériques comme temperature, humidity, etc. sont également échappées 
                 par mesure de sécurité, même si elles ne contiennent normalement pas de HTML
             #}
-            <p class="temperature">Température :<span class="value"> {{ temperature|e('html') }}°C</span></p>
+            <p class="temperature">Température :<span class="value colorTemp"> {{ temperature|e('html') }}°C</span></p>
             <div class="weather-data">
-                <p>Température min :<span class="value"> {{ temperatureMin|e('html') }}°C</span></p>
-                <p>Température max :<span class="value"> {{ temperatureMax|e('html') }}°C</span></p>
-                <p>Température ressentie :<span class="value"> {{ feelsLike|e('html') }}°C</span></p>
+                <p>Température min :<span class="value colorTemp"> {{ temperatureMin|e('html') }}°C</span></p>
+                <p>Température max :<span class="value colorTemp"> {{ temperatureMax|e('html') }}°C</span></p>
+                <p>Température ressentie :<span class="value colorTemp"> {{ feelsLike|e('html') }}°C</span></p>
                 <p>Vitesse du vent :<span class="value"> {{ windSpeed|e('html') }} km/h</span></p>
                 <p>Type de précipitation :<span class="value"> {{ precipitationType|e('html') }}</span></p>
                 <p>Probabilité de précipitation :<span class="value"> {{ probabilityPrecipitation|e('html') }}%</span></p>
@@ -125,15 +125,5 @@
 {# Section JavaScript #}
 {% block javascripts %}
     {{ parent() }}
-    <script>
-        // Script pour masquer automatiquement les messages flash après 5 secondes
-        document.addEventListener('DOMContentLoaded', function() {
-            const alerts = document.querySelectorAll('.auto-dismiss');
-            alerts.forEach(alert => {
-                setTimeout(() => {
-                    alert.remove();
-                }, 5000); // Délai de 5 secondes
-            });
-        });
-    </script>
+    <script src="{{ asset('js/meteo.js') }}"></script>
 {% endblock %}

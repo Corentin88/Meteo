@@ -106,3 +106,12 @@ h1,h2{
     margin-top: 50px;
 }
 
+.temp-cold{
+    color: rgb(56, 135, 169);
+}
+.temp-warm{
+    color: rgb(17, 164, 17);
+}
+.temp-hot{
+    color: rgb(238, 93, 15);
+}
