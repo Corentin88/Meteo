@@ -33,9 +33,9 @@ h1,h2{
     width: 100%;  /* Prend toute la largeur disponible */
 }
 .weather-cardToday {
-    width: 50%; /* Largeur fixe de chaque carte */
-    height: 100%; /* Hauteur fixe pour toutes les cartes */
-    padding: 15px; /* Espace intérieur (entre le bord et le contenu) */
+    width: 50%;
+    min-width: 300px; /* Largeur minimale pour éviter que la carte ne devienne trop étroite */
+    padding: 15px;
     background-color: #ffffff; /* Fond blanc pour lisibilité */
     border-radius: 8px; /* Coins arrondis */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Ombre pour donner un effet de profondeur */
@@ -44,7 +44,6 @@ h1,h2{
     flex-direction: column; /* Organise les éléments de haut en bas */
     justify-content: space-between; /* Répartit le contenu sur toute la hauteur */
     box-sizing: border-box; /* Le padding est inclus dans la largeur/hauteur totale */
-    overflow-y: auto; /* Ajoute une barre de défilement si le contenu est trop long */
 }
 .weather-data {
     display: grid; 
@@ -92,6 +91,10 @@ h1,h2{
     /* Mobile : 1 carte par ligne */
     .weather-cardWeek {
         flex: 1 1 100%;
+    }
+    .weather-cardToday {
+        display: flex;
+        flex-direction: column;
     }
 }
 /* 🏷️ Style optionnel : les titres des cartes (par exemple "Lundi", "Mardi", etc.) */
