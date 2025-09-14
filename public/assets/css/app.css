@@ -44,11 +44,13 @@ h1,h2{
     flex-direction: column; /* Organise les éléments de haut en bas */
     justify-content: space-between; /* Répartit le contenu sur toute la hauteur */
     box-sizing: border-box; /* Le padding est inclus dans la largeur/hauteur totale */
+    
 }
 .weather-data {
     display: grid; 
     grid-template-columns: repeat(3, auto); 
     text-align: center;
+    gap: 10px;
     
 }
 .value {
@@ -87,12 +89,12 @@ h1,h2{
     }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 620px) {
     /* Mobile : 1 carte par ligne */
     .weather-cardWeek {
         flex: 1 1 100%;
     }
-    .weather-cardToday {
+    .weather-data {
         display: flex;
         flex-direction: column;
     }
@@ -130,7 +132,7 @@ h1,h2{
     color: rgb(0, 120, 0);
 }
 .temp-hot{
-    color: rgb(238, 93, 15);
+    color: rgb(193, 18, 31);
 }
 
 button{
