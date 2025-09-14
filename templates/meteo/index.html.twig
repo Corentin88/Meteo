@@ -110,10 +110,10 @@
                     On utilise le point (.) pour accéder aux propriétés de l'objet/tableau day
                     Ex: day.temperature, day.wind.speed, etc.
                 #}
-                <p>Température :<span class="value"> {{ day.temperature|e('html') }}°C</span></p>
-                <p>Température min :<span class="value"> {{ day.temperature_min|e('html') }}°C</span></p>
-                <p>Température max :<span class="value"> {{ day.temperature_max|e('html') }}°C</span></p>
-                <p>Température ressentie :<span class="value"> {{ day.feels_like|e('html') }}°C</span></p>
+                <p>Température :<span class="value colorTemp"> {{ day.temperature|e('html') }}°C</span></p>
+                <p>Température min :<span class="value colorTemp"> {{ day.temperature_min|e('html') }}°C</span></p>
+                <p>Température max :<span class="value colorTemp"> {{ day.temperature_max|e('html') }}°C</span></p>
+                <p>Température ressentie :<span class="value colorTemp"> {{ day.feels_like|e('html') }}°C</span></p>
                 <p>Vitesse du vent :<span class="value"> {{ day.wind.speed|e('html') }} km/h</span></p>
                 <p>Type de précipitation :<span class="value"> {{ day.precipitation.type|e('html') }}</span></p>
                 <p>Probabilité de précipitation :<span class="value"> {{ day.probability.precipitation|e('html') }}%</span></p>
