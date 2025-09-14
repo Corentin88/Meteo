@@ -1,0 +1,139 @@
+{# 
+    Fichier : index.html.twig
+    Template principal pour l'affichage des données météorologiques
+    Hérite de base.html.twig et affiche les prévisions météo actuelles et sur 7 jours
+    
+    Filtres Twig importants utilisés :
+    - e() : Échappement HTML pour la sécurité (prévient les attaques XSS)
+    - url_encode : Encode une chaîne pour une utilisation dans une URL
+    - capitalize : Met la première lettre en majuscule
+    - html_attr : Échappe une chaîne pour l'utiliser comme attribut HTML
+#}
+
+{# Héritage du template de base #}
+{% extends 'base.html.twig' %}
+
+{# Titre de la page #}
+{% block title %}Météo du jour{% endblock %}
+
+{# Contenu principal de la page #}
+{% block body %}
+    {# Affichage des messages flash d'erreur #}
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger auto-dismiss">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+    {# Section de recherche de ville #}
+    <div class="container mt-2">
+        <div class="col-md-6 col-lg-6">
+            {# Formulaire de recherche par ville #}
+            <form action="{{ path('meteo') }}" method="GET">         
+                <input type="text" name="ville" placeholder="Entrez une ville" value="{{ ville }}" required>
+                <button type="submit">Rechercher</button>  
+            </form>
+        </div>
+    </div>
+
+    {# Section météo du jour #}
+    <h1>Météo du jour pour {{ ville|e('html')|capitalize }}</h1>
+    {# 
+        Explication des filtres :
+        - ville|e('html') : Échappe le contenu de la variable 'ville' pour une utilisation sûre en HTML
+        - |capitalize : Met en majuscule la première lettre du nom de la ville
+    #}
+    
+    <div class="weather-today">
+        <div class="weather-cardToday">
+            <h3><span class="value">{{ day|e('html') }}</span></h3>
+            {# 
+                Affichage de l'icône météo avec gestion sécurisée :
+                - asset() : Génère une URL vers un fichier dans le dossier public/
+                - ~ : Opérateur de concaténation en Twig
+                - icon|e('url') : Échappe la valeur pour une utilisation dans une URL
+                - alt="{{ weather|e('html_attr') }}" : Échappe pour un attribut HTML
+            #}
+            <img class="icon" 
+                 src="{{ asset('assets/icons/weather_icons/set01/small/' ~ icon|e('url') ~ '.png') }}" 
+                 alt="{{ weather|e('html_attr') }}">
+            
+            {# Affichage des données météo principales avec échappement HTML #}
+            <p>Résumé : {{ summary|e('html') }}</p>
+            {# 
+                Les valeurs numériques comme temperature, humidity, etc. sont également échappées 
+                par mesure de sécurité, même si elles ne contiennent normalement pas de HTML
+            #}
+            <p class="temperature">Température :<span class="value"> {{ temperature|e('html') }}°C</span></p>
+            <div class="weather-data">
+                <p>Température min :<span class="value"> {{ temperatureMin|e('html') }}°C</span></p>
+                <p>Température max :<span class="value"> {{ temperatureMax|e('html') }}°C</span></p>
+                <p>Température ressentie :<span class="value"> {{ feelsLike|e('html') }}°C</span></p>
+                <p>Vitesse du vent :<span class="value"> {{ windSpeed|e('html') }} km/h</span></p>
+                <p>Type de précipitation :<span class="value"> {{ precipitationType|e('html') }}</span></p>
+                <p>Probabilité de précipitation :<span class="value"> {{ probabilityPrecipitation|e('html') }}%</span></p>
+                <p>Probabilité de tempête :<span class="value"> {{ probabilityStorm|e('html') }}%</span></p>
+                <p>Probabilité de gel :<span class="value"> {{ probabilityFreeze|e('html') }}%</span></p>
+                <p>Humidité :<span class="value"> {{ humidity|e('html') }}%</span></p>
+            </div>
+        </div>
+    </div>
+
+    {# Section des prévisions sur 7 jours #}
+    <h2>Prévisions pour la semaine :</h2>
+    <div class="weather-week">
+        {% for day in dailyData %}
+            {# 
+                Boucle sur chaque jour de prévision
+                Chaque 'day' est un tableau associatif contenant les données météo pour un jour
+            #}
+            <div class="weather-cardWeek">
+                {# 
+                    formattedDay contient déjà le jour formaté (ex: "Lundi 1er Janvier")
+                    On l'échappe pour la sécurité
+                #}
+                <h3>{{ day.formattedDay|e('html') }}</h3>
+                
+                {# 
+                    Même principe que pour l'icône principale, mais avec les données du jour en cours de boucle
+                    Note : 'day.icon' fait référence à la clé 'icon' du tableau day, pas à la variable icon globale
+                #}
+                <img class="icon" 
+                     src="{{ asset('assets/icons/weather_icons/set01/small/' ~ day.icon|e('url') ~ '.png') }}" 
+                     alt="{{ day.weather|default(weather)|e('html_attr') }}">
+                
+                {# 
+                    Affichage des données météo pour ce jour
+                    On utilise le point (.) pour accéder aux propriétés de l'objet/tableau day
+                    Ex: day.temperature, day.wind.speed, etc.
+                #}
+                <p>Température :<span class="value"> {{ day.temperature|e('html') }}°C</span></p>
+                <p>Température min :<span class="value"> {{ day.temperature_min|e('html') }}°C</span></p>
+                <p>Température max :<span class="value"> {{ day.temperature_max|e('html') }}°C</span></p>
+                <p>Température ressentie :<span class="value"> {{ day.feels_like|e('html') }}°C</span></p>
+                <p>Vitesse du vent :<span class="value"> {{ day.wind.speed|e('html') }} km/h</span></p>
+                <p>Type de précipitation :<span class="value"> {{ day.precipitation.type|e('html') }}</span></p>
+                <p>Probabilité de précipitation :<span class="value"> {{ day.probability.precipitation|e('html') }}%</span></p>
+                <p>Probabilité de tempête :<span class="value"> {{ day.probability.storm|e('html') }}%</span></p>
+                <p>Probabilité de gel :<span class="value"> {{ day.probability.freeze|e('html') }}%</span></p>
+                <p>Humidité :<span class="value"> {{ day.humidity|e('html') }}%</span></p>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{# Section JavaScript #}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        // Script pour masquer automatiquement les messages flash après 5 secondes
+        document.addEventListener('DOMContentLoaded', function() {
+            const alerts = document.querySelectorAll('.auto-dismiss');
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    alert.remove();
+                }, 5000); // Délai de 5 secondes
+            });
+        });
+    </script>
+{% endblock %}

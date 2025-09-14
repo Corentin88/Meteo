@@ -1,0 +1,108 @@
+/* 🌤️ Couleur de fond générale de la page */
+body {
+    background-color: skyblue; /* Bleu ciel pour une ambiance météo agréable */
+    font-family: 'Roboto', sans-serif;
+}
+h1,h2{
+    font-size: 3rem;
+    text-align: center;
+    text-decoration: underline;
+}
+.temperature{
+    font-size: 3rem;    
+}
+/* 🌞 Style général pour la section de la météo du jour */
+.weather-today {
+    display: flex; /* Affiche les éléments en ligne (flexbox) */
+    justify-content: center; /* Centre horizontalement les éléments */
+    gap: 20px; /* Espace entre les cartes météo */
+    margin: 40px 0px; /* Marge au-dessus de la section */
+    width: 100%;  /* Prend toute la largeur disponible */
+}
+.weather-cardToday {
+    width: 50%; /* Largeur fixe de chaque carte */
+    height: 100%; /* Hauteur fixe pour toutes les cartes */
+    padding: 15px; /* Espace intérieur (entre le bord et le contenu) */
+    background-color: #ffffff; /* Fond blanc pour lisibilité */
+    border-radius: 8px; /* Coins arrondis */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Ombre pour donner un effet de profondeur */
+    text-align: center; /* Centre le texte à l'intérieur */
+    display: flex; /* Flexbox pour organiser le contenu verticalement */
+    flex-direction: column; /* Organise les éléments de haut en bas */
+    justify-content: space-between; /* Répartit le contenu sur toute la hauteur */
+    box-sizing: border-box; /* Le padding est inclus dans la largeur/hauteur totale */
+    overflow-y: auto; /* Ajoute une barre de défilement si le contenu est trop long */
+}
+.weather-data {
+    display: grid; 
+    grid-template-columns: repeat(3, auto); 
+    text-align: center;
+    
+}
+.value {
+    font-weight: bold;
+}
+/* 📅 Style général pour la section des prévisions de la semaine */
+.weather-week {
+    display: flex; /* Flexbox pour aligner les cartes sur une ligne */
+    flex-wrap: wrap; /* Permet aux cartes de passer à la ligne si besoin */
+    justify-content: center; /* Centre les cartes horizontalement */
+    gap: 20px; /* Espace entre chaque carte météo */
+    margin: 40px 20px; /* Marge au-dessus de la section */
+}
+
+/* 🃏 Style pour chaque carte météo (du jour ou de la semaine) */
+.weather-cardWeek {
+    flex: 1 1 calc(33.33333333333333% - 20px);
+    width: 300px; /* Largeur fixe de chaque carte */
+    height: 350px; /* Hauteur fixe pour toutes les cartes */
+    padding: 15px; /* Espace intérieur (entre le bord et le contenu) */
+    background-color: #ffffff; /* Fond blanc pour lisibilité */
+    border-radius: 8px; /* Coins arrondis */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Ombre pour donner un effet de profondeur */
+    text-align: center; /* Centre le texte à l'intérieur */
+    display: flex; /* Flexbox pour organiser le contenu verticalement */
+    flex-direction: column; /* Organise les éléments de haut en bas */
+    justify-content: space-between; /* Répartit le contenu sur toute la hauteur */
+    box-sizing: border-box; /* Le padding est inclus dans la largeur/hauteur totale */
+    overflow-y: auto; /* Ajoute une barre de défilement si le contenu est trop long */
+}
+/* Media queries pour rendre responsive */
+@media (max-width: 992px) {
+    /* Tablette : 2 cartes par ligne */
+    .weather-cardWeek {
+        flex: 1 1 calc(50% - 20px);
+    }
+}
+
+@media (max-width: 600px) {
+    /* Mobile : 1 carte par ligne */
+    .weather-cardWeek {
+        flex: 1 1 100%;
+    }
+}
+/* 🏷️ Style optionnel : les titres des cartes (par exemple "Lundi", "Mardi", etc.) */
+.weather-cardWeek h3, .weather-cardToday h3 {
+    color: #007BFF; /* Bleu clair (accentué) */
+    font-size: 1.2em; /* Taille du texte un peu plus grande */
+    margin-bottom: 10px; /* Espace en dessous du titre */
+}
+
+/* 🌗 Style optionnel : fond alterné sur une carte sur deux pour la lisibilité */
+.weather-week .weather-cardWeek:nth-child(even) {
+    background-color: #ededed; /* Fond gris très clair sur les cartes paires */
+}
+
+/* 🌦️ Icône météo : image représentant les conditions météo (soleil, pluie, etc.) */
+.icon {
+    width: 90px !important;  /* Largeur fixe des icônes (prioritaire avec !important) */
+    height: auto !important; /* Garde le ratio hauteur/largeur d’origine */
+    display: block; /* Empêche les marges automatiques d’être ignorées */
+    margin: 0 auto; /* Centre l’image horizontalement */
+}
+
+
+.search{
+    margin-top: 50px;
+}
+
