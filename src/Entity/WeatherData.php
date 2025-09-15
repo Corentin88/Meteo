@@ -3,9 +3,9 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\WeatherDataRepository;
 
-
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: WeatherDataRepository::class)]
 class WeatherData
 {
     #[ORM\Id]
@@ -57,6 +57,9 @@ class WeatherData
 
     #[ORM\Column(type: 'float', nullable: true)]
     private ?float $humidity = null;
+
+    #[ORM\Column(type: 'datetime')]
+    private ?\DateTimeInterface $updatedAt = null;
 
     public function getId(): ?int
     {
@@ -224,6 +227,15 @@ class WeatherData
     public function setHumidity(?float $humidity): self
     {
         $this->humidity = $humidity;
+        return $this;
+    }
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
         return $this;
     }
 }
