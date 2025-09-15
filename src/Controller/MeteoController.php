@@ -34,14 +34,22 @@ class MeteoController extends AbstractController
         $response->headers->set('X-Robots-Tag', 'index, follow');
 
         try {
-            $today = new \DateTime('today');
-
             // Vérifier si la météo est déjà en base
-
             $dailyData = $this->weatherDataService->getWeatherDataFromDb($city, 60); // 60 min max
+            
             if (!$dailyData) {
-                $dailyData = $this->weatherApiService->getWeatherData($city)['daily']['data'] ?? [];
-                $this->weatherDataService->saveWeatherData($city, $dailyData);
+                // CORRECTION: Accès correct à la structure de données de l'API
+                $apiResponse = $this->weatherApiService->getWeatherData($city);
+                $dailyData = $apiResponse['daily']['data'] ?? $apiResponse['daily'] ?? [];
+                
+                if (!empty($dailyData)) {
+                    $this->weatherDataService->saveWeatherData($city, $dailyData);
+                }
+            }
+
+            // Si toujours pas de données, lancer une exception
+            if (empty($dailyData)) {
+                throw new \Exception("Aucune donnée météo disponible pour {$city}");
             }
 
 

@@ -51,45 +51,53 @@ class WeatherDataService
         $this->entityManager->flush();
     }
     public function getWeatherDataFromDb(string $city, int $maxAgeMinutes = 60): ?array
-{
-    $today = new \DateTime('today');
-    $existingData = $this->entityManager
-        ->getRepository(WeatherData::class)
-        ->findWeatherDataFromToday($city,$today);
+    {
+        $today = new \DateTime('today');
+        $existingData = $this->entityManager
+            ->getRepository(WeatherData::class)
+            ->findWeatherDataFromToday($city, $today);
 
-    if (!$existingData) {
-        return null;
-    }
-    // Vérifier si la première entrée est trop vieille
-    $firstEntry = $existingData[0];
-    $diffMinutes = (new \DateTime())->getTimestamp() - $firstEntry->getUpdatedAt()->getTimestamp();
+        if (empty($existingData)) {
+            return null;
+        }
 
-    if ($diffMinutes > $maxAgeMinutes * 60) {
-        return null; // Forcer un nouvel appel API
-    }
+        // CORRECTION: Vérifier si la première entrée est trop vieille
+        $firstEntry = $existingData[0];
+        $updatedAt = $firstEntry->getUpdatedAt();
+        
+        // Vérification de sécurité pour éviter les erreurs null
+        if (!$updatedAt) {
+            return null; // Si pas de date de mise à jour, forcer un nouvel appel API
+        }
+        
+        $diffMinutes = (new \DateTime())->getTimestamp() - $updatedAt->getTimestamp();
 
-    $dailyData = [];
-    foreach ($existingData as $data) {
-        $dailyData[] = [
-            'day' => $data->getDay()->format('Y-m-d'),
-            'weather' => $data->getWeather(),
-            'icon' => $data->getIcon(),
-            'summary' => $data->getSummary(),
-            'temperature' => $data->getTemperature(),
-            'temperature_min' => $data->getTemperatureMin(),
-            'temperature_max' => $data->getTemperatureMax(),
-            'feels_like' => $data->getFeelsLike(),
-            'wind' => ['speed' => $data->getWindSpeed()],
-            'precipitation' => ['type' => $data->getPrecipitationType()],
-            'probability' => [
-                'precipitation' => $data->getProbabilityPrecipitation(),
-                'storm' => $data->getProbabilityStorm(),
-                'freeze' => $data->getProbabilityFreeze(),
-            ],
-            'humidity' => $data->getHumidity(),
-        ];
-    }
+        if ($diffMinutes > $maxAgeMinutes * 60) {
+            return null; // Forcer un nouvel appel API
+        }
 
-    return $dailyData;
-}
-}
+        // Convertir les entités en tableau pour le contrôleur
+        $dailyData = [];
+        foreach ($existingData as $data) {
+            $dailyData[] = [
+                'day' => $data->getDay()->format('Y-m-d'),
+                'weather' => $data->getWeather(),
+                'icon' => $data->getIcon(),
+                'summary' => $data->getSummary(),
+                'temperature' => $data->getTemperature(),
+                'temperature_min' => $data->getTemperatureMin(),
+                'temperature_max' => $data->getTemperatureMax(),
+                'feels_like' => $data->getFeelsLike(),
+                'wind' => ['speed' => $data->getWindSpeed()],
+                'precipitation' => ['type' => $data->getPrecipitationType()],
+                'probability' => [
+                    'precipitation' => $data->getProbabilityPrecipitation(),
+                    'storm' => $data->getProbabilityStorm(),
+                    'freeze' => $data->getProbabilityFreeze(),
+                ],
+                'humidity' => $data->getHumidity(),
+            ];
+        }
+
+        return $dailyData;
+    }}
