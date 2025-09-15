@@ -1,20 +1,29 @@
 {# 
-    Fichier : index.html.twig
-    Template principal pour l'affichage des données météorologiques
-    Hérite de base.html.twig et affiche les prévisions météo actuelles et sur 7 jours
-    
-    Filtres Twig importants utilisés :
-    - e() : Échappement HTML pour la sécurité (prévient les attaques XSS)
-    - url_encode : Encode une chaîne pour une utilisation dans une URL
-    - capitalize : Met la première lettre en majuscule
-    - html_attr : Échappe une chaîne pour l'utiliser comme attribut HTML
+    FICHIER : index.html.twig
+    ========================
+    Template principal de l'application météo qui affiche :
+    - Les conditions météorologiques actuelles
+    - Les prévisions sur 7 jours
+    - Un formulaire de recherche par ville
+
+    SÉCURITÉ :
+    - Utilisation systématique des filtres d'échappement Twig (e()) pour prévenir les attaques XSS
+    - Échappement des URLs et attributs HTML
+    - Validation des entrées utilisateur côté serveur
+
+    VARIABLES DISPONIBLES :
+    - ville : Nom de la ville recherchée
+    - day : Date du jour formatée
+    - weather/icon : Conditions météo actuelles et icône correspondante
+    - temperature/feelsLike : Température actuelle et ressentie
+    - dailyData : Tableau des prévisions sur 7 jours
 #}
 
 {# Héritage du template de base #}
 {% extends 'base.html.twig' %}
 
 {# Titre de la page #}
-{% block title %}Météo du jour{% endblock %}
+{% block title %}Météo du jour - {{ ville|e('html') }}{% endblock %}
 
 {# Contenu principal de la page #}
 {% block body %}
@@ -28,105 +37,109 @@
     {# Section de recherche de ville #}
     <div class="container mt-2">
         <div class="col-md-6 col-lg-6">
-            {# Formulaire de recherche par ville #}
+            {# 
+                Formulaire de recherche
+                - Méthode GET pour permettre le partage d'URL
+                - Champ requis pour éviter les recherches vides
+            #}
             <form action="{{ path('meteo') }}" method="GET">         
-                <input type="text" name="ville" placeholder="Entrez une ville" value="{{ ville }}" required>
+                <input type="text" 
+                       name="ville" 
+                       placeholder="Entrez une ville" 
+                       value="{{ ville }}" 
+                       required
+                       aria-label="Rechercher une ville">
                 <button type="submit">Rechercher</button>  
             </form>
         </div>
     </div>
+
+    {# En-tête de la section météo du jour #}
     <div class="containerTitle">
-        {# Section météo du jour #}
         <h1>Météo du jour pour {{ ville|e('html')|capitalize }}</h1>
     </div>
-    {# 
-        Explication des filtres :
-        - ville|e('html') : Échappe le contenu de la variable 'ville' pour une utilisation sûre en HTML
-        - |capitalize : Met en majuscule la première lettre du nom de la ville
-    #}
     
+    {# Carte météo du jour #}
     <div class="weather-today">
         <div class="weather-cardToday">
-            <h3 aria-level="2"><span class="value">{{ day|e('html') }}</span></h3>
+            <h2 aria-level="2">{{ day|e('html') }}</h2>
+            
             {# 
-                Affichage de l'icône météo avec gestion sécurisée :
-                - asset() : Génère une URL vers un fichier dans le dossier public/
-                - ~ : Opérateur de concaténation en Twig
-                - icon|e('url') : Échappe la valeur pour une utilisation dans une URL
-                - alt="{{ weather|e('html_attr') }}" : Échappe pour un attribut HTML
+                Affichage de l'icône météo
+                - Chemin dynamique vers les icônes météo
+                - Alternative textuelle pour l'accessibilité
             #}
             <img class="icon" 
                  src="{{ asset('assets/icons/weather_icons/set01/big/' ~ icon|e('url') ~ '.png') }}" 
-                 alt="{{ weather|e('html_attr') }}">
+                 alt="{{ weather|e('html_attr') }}"
+                 aria-hidden="true">
             
-            {# Affichage des données météo principales avec échappement HTML #}
-            <p>Résumé : {{ summary|e('html') }}</p>
-            {# 
-                Les valeurs numériques comme temperature, humidity, etc. sont également échappées 
-                par mesure de sécurité, même si elles ne contiennent normalement pas de HTML
-            #}
-            <p class="temperature">Température :<span class="value colorTemp"> {{ temperature|e('html') }}°C</span></p>
+            {# Données météo principales #}
+            <p>Résumé : <span class="value">{{ summary|e('html') }}</span></p>
+            <p class="temperature">
+                Température : 
+                <span class="value colorTemp">{{ temperature|e('html') }}°C</span>
+            </p>
+            
+            {# Détails météorologiques #}
             <div class="weather-data">
-                <p>Température min :<span class="value colorTemp"> {{ temperatureMin|e('html') }}°C</span></p>
-                <p>Température max :<span class="value colorTemp"> {{ temperatureMax|e('html') }}°C</span></p>
-                <p>Température ressentie :<span class="value colorTemp"> {{ feelsLike|e('html') }}°C</span></p>
-                <p>Vitesse du vent :<span class="value"> {{ windSpeed|e('html') }} km/h</span></p>
-                <p>Type de précipitation :<span class="value"> {{ precipitationType|e('html') }}</span></p>
-                <p>Probabilité de précipitation :<span class="value"> {{ probabilityPrecipitation|e('html') }}%</span></p>
-                <p>Probabilité de tempête :<span class="value"> {{ probabilityStorm|e('html') }}%</span></p>
-                <p>Probabilité de gel :<span class="value"> {{ probabilityFreeze|e('html') }}%</span></p>
-                <p>Humidité :<span class="value"> {{ humidity|e('html') }}%</span></p>
+                <p>Température min : <span class="value colorTemp">{{ temperatureMin|e('html') }}°C</span></p>
+                <p>Température max : <span class="value colorTemp">{{ temperatureMax|e('html') }}°C</span></p>
+                <p>Ressenti : <span class="value colorTemp">{{ feelsLike|e('html') }}°C</span></p>
+                <p>Vent : <span class="value">{{ windSpeed|e('html') }} km/h</span></p>
+                <p>Précipitations : <span class="value">{{ precipitationType|e('html') }} ({{ probabilityPrecipitation|e('html') }}%)</span></p>
+                <p>Risque orage : <span class="value">{{ probabilityStorm|e('html') }}%</span></p>
+                <p>Risque gel : <span class="value">{{ probabilityFreeze|e('html') }}%</span></p>
+                <p>Humidité : <span class="value">{{ humidity|e('html') }}%</span></p>
             </div>
         </div>
     </div>
     
-    <div class="containerTitle">
     {# Section des prévisions sur 7 jours #}
-    <h2>Prévisions pour la semaine :</h2>
+    <div class="containerTitle">
+        <h2>Prévisions pour la semaine</h2>
     </div>
+    
     <div class="weather-week">
-        {% for day in dailyData %}
+        {% for forecast in dailyData %}
             {# 
-                Boucle sur chaque jour de prévision
-                Chaque 'day' est un tableau associatif contenant les données météo pour un jour
+                Carte pour chaque jour de prévision
+                Utilisation de la variable 'forecast' au lieu de 'day' pour plus de clarté
             #}
             <div class="weather-cardWeek">
-                {# 
-                    formattedDay contient déjà le jour formaté (ex: "Lundi 1er Janvier")
-                    On l'échappe pour la sécurité
-                #}
-                <h3>{{ day.formattedDay|e('html') }}</h3>
+                <h3>{{ forecast.formattedDay|e('html') }}</h3>
                 
-                {# 
-                    Même principe que pour l'icône principale, mais avec les données du jour en cours de boucle
-                    Note : 'day.icon' fait référence à la clé 'icon' du tableau day, pas à la variable icon globale
-                #}
                 <img class="icon" 
-                     src="{{ asset('assets/icons/weather_icons/set01/big/' ~ day.icon|e('url') ~ '.png') }}" 
-                     alt="{{ day.weather|default(weather)|e('html_attr') }}">
+                     src="{{ asset('assets/icons/weather_icons/set01/big/' ~ forecast.icon|e('url') ~ '.png') }}" 
+                     alt="{{ forecast.weather|default(weather)|e('html_attr') }}"
+                     aria-hidden="true">
                 
-                {# 
-                    Affichage des données météo pour ce jour
-                    On utilise le point (.) pour accéder aux propriétés de l'objet/tableau day
-                    Ex: day.temperature, day.wind.speed, etc.
-                #}
-                <p>Température :<span class="value colorTemp"> {{ day.temperature|e('html') }}°C</span></p>
-                <p>Température min :<span class="value colorTemp"> {{ day.temperature_min|e('html') }}°C</span></p>
-                <p>Température max :<span class="value colorTemp"> {{ day.temperature_max|e('html') }}°C</span></p>
-                <p>Température ressentie :<span class="value colorTemp"> {{ day.feels_like|e('html') }}°C</span></p>
-                <p>Vitesse du vent :<span class="value"> {{ day.wind.speed|e('html') }} km/h</span></p>
-                <p>Type de précipitation :<span class="value"> {{ day.precipitation.type|e('html') }}</span></p>
-                <p>Probabilité de précipitation :<span class="value"> {{ day.probability.precipitation|e('html') }}%</span></p>
-                <p>Probabilité de tempête :<span class="value"> {{ day.probability.storm|e('html') }}%</span></p>
-                <p>Probabilité de gel :<span class="value"> {{ day.probability.freeze|e('html') }}%</span></p>
-                <p>Humidité :<span class="value"> {{ day.humidity|e('html') }}%</span></p>
+                {# Données météo pour le jour #}
+                <p>Température : <span class="value colorTemp">{{ forecast.temperature|e('html') }}°C</span></p>
+                <p>Min/Max : 
+                    <span class="value colorTemp">
+                        {{ forecast.temperature_min|e('html') }}°C / {{ forecast.temperature_max|e('html') }}°C
+                    </span>
+                </p>
+                <p>Ressenti : <span class="value colorTemp">{{ forecast.feels_like|e('html') }}°C</span></p>
+                <p>Vent : <span class="value">{{ forecast.wind.speed|e('html') }} km/h</span></p>
+                <p>Précipitations : 
+                    <span class="value">
+                        {{ forecast.precipitation.type|e('html') }} ({{ forecast.probability.precipitation|e('html') }}%)
+                    </span>
+                </p>
             </div>
         {% endfor %}
     </div>
 {% endblock %}
 
-{# Section JavaScript #}
+{# 
+    Section JavaScript
+    ==================
+    - Inclut le template parent
+    - Charge le fichier JavaScript spécifique à la météo
+#}
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ asset('js/meteo.js') }}"></script>
+    <script src="{{ asset('js/meteo.js') }}" defer></script>
 {% endblock %}

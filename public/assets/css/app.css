@@ -1,155 +1,176 @@
 /* 🌤️ Couleur de fond générale de la page */
 body {
-    background-color: skyblue; /* Bleu ciel pour une ambiance météo agréable */
-    font-family: 'Roboto', sans-serif;
+    background-color: skyblue; /* Fond bleu ciel pour évoquer le ciel */
+    font-family: 'Roboto', sans-serif; /* Police de caractères principale */
 }
-h1,h2{
-    font-size: 3rem;
-    text-align: center;
-    font-weight: bold;
-    font-family: 'Pacifico', sans-serif;
-    background-color: #ffffff;
-    padding: 10px 20px;      /* Espacement entre le texte et le cadre */
-    display: inline-block;    /* Pour que le cadre s’adapte au texte */
-    border-radius: 10px;      /* Coins arrondis (optionnel) */
-    margin: 20px ;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Ombre pour donner un effet de profondeur */
 
+/* Style pour les titres principaux h1 et h2 */
+h1, h2 {
+    font-size: 3rem; /* Taille de police importante pour la visibilité */
+    text-align: center; /* Centrage du texte */
+    font-weight: bold; /* Texte en gras */
+    font-family: 'Pacifico', sans-serif; /* Police stylisée pour les titres */
+    background-color: #ffffff; /* Fond blanc pour un bon contraste */
+    padding: 10px 20px;      /* Espacement interne */
+    display: inline-block;    /* Permet au fond de s'adapter au contenu */
+    border-radius: 10px;      /* Coins arrondis */
+    margin: 20px;            /* Marge extérieure */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Ombre portée pour l'effet de profondeur */
 }
-.containerTitle{
+
+/* Conteneur pour centrer le titre */
+.containerTitle {
     display: flex;
-    justify-content: center;
-    
-}
-.temperature{
-    font-size: 3rem;    
-}
-/* 🌞 Style général pour la section de la météo du jour */
-.weather-today {
-    display: flex; /* Affiche les éléments en ligne (flexbox) */
-    justify-content: center; /* Centre horizontalement les éléments */
-    gap: 20px; /* Espace entre les cartes météo */
-    margin: 40px 0px; /* Marge au-dessus de la section */
-    width: 100%;  /* Prend toute la largeur disponible */
-}
-.weather-cardToday {
-    width: 50%;
-    min-width: 300px; /* Largeur minimale pour éviter que la carte ne devienne trop étroite */
-    padding: 15px;
-    background-color: #ffffff; /* Fond blanc pour lisibilité */
-    border-radius: 8px; /* Coins arrondis */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Ombre pour donner un effet de profondeur */
-    text-align: center; /* Centre le texte à l'intérieur */
-    display: flex; /* Flexbox pour organiser le contenu verticalement */
-    flex-direction: column; /* Organise les éléments de haut en bas */
-    justify-content: space-between; /* Répartit le contenu sur toute la hauteur */
-    box-sizing: border-box; /* Le padding est inclus dans la largeur/hauteur totale */
-    
-}
-.weather-data {
-    display: grid; 
-    grid-template-columns: repeat(3, auto); 
-    text-align: center;
-    gap: 10px;
-    
-}
-.value {
-    font-weight: bold;
-}
-/* 📅 Style général pour la section des prévisions de la semaine */
-.weather-week {
-    display: flex; /* Flexbox pour aligner les cartes sur une ligne */
-    flex-wrap: wrap; /* Permet aux cartes de passer à la ligne si besoin */
-    justify-content: center; /* Centre les cartes horizontalement */
-    gap: 20px; /* Espace entre chaque carte météo */
-    margin: 40px 20px; /* Marge au-dessus de la section */
+    justify-content: center; /* Centre horizontalement */
 }
 
-/* 🃏 Style pour chaque carte météo (du jour ou de la semaine) */
-.weather-cardWeek {
-    flex: 1 1 calc(33.33333333333333% - 20px);
-    width: 300px; /* Largeur fixe de chaque carte */
-    height: 350px; /* Hauteur fixe pour toutes les cartes */
-    padding: 15px; /* Espace intérieur (entre le bord et le contenu) */
-    background-color: #ffffff; /* Fond blanc pour lisibilité */
-    border-radius: 8px; /* Coins arrondis */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Ombre pour donner un effet de profondeur */
-    text-align: center; /* Centre le texte à l'intérieur */
-    display: flex; /* Flexbox pour organiser le contenu verticalement */
-    flex-direction: column; /* Organise les éléments de haut en bas */
-    justify-content: space-between; /* Répartit le contenu sur toute la hauteur */
-    box-sizing: border-box; /* Le padding est inclus dans la largeur/hauteur totale */
-    overflow-y: auto; /* Ajoute une barre de défilement si le contenu est trop long */
+/* Style spécifique pour l'affichage des températures */
+.temperature {
+    font-size: 3rem;    /* Taille de police importante pour les températures */
 }
-/* Media queries pour rendre responsive */
+
+/* ========== MÉTÉO DU JOUR ========== */
+/* Conteneur principal pour la météo du jour */
+.weather-today {
+    display: flex; /* Utilisation de flexbox pour l'alignement */
+    justify-content: center; /* Centrage horizontal */
+    gap: 20px; /* Espacement entre les éléments */
+    margin: 40px 0px; /* Marge verticale */
+    width: 100%; /* Largeur complète */
+}
+
+/* Carte de météo du jour */
+.weather-cardToday {
+    width: 50%; /* Largeur de 50% du conteneur parent */
+    min-width: 300px; /* Largeur minimale pour la lisibilité */
+    padding: 15px; /* Espacement intérieur */
+    background-color: #ffffff; /* Fond blanc */
+    border-radius: 8px; /* Coins arrondis */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Ombre portée */
+    text-align: center; /* Centrage du texte */
+    display: flex; /* Flexbox pour l'organisation */
+    flex-direction: column; /* Colonne verticale */
+    justify-content: space-between; /* Répartition de l'espace */
+    box-sizing: border-box; /* Prise en compte du padding dans la largeur */
+}
+
+/* Grille pour les données météorologiques */
+.weather-data {
+    display: grid; /* Utilisation de CSS Grid */
+    grid-template-columns: repeat(3, auto); /* 3 colonnes de largeur automatique */
+    text-align: center; /* Centrage du texte */
+    gap: 10px; /* Espacement entre les éléments */
+}
+
+/* Style pour les valeurs importantes */
+.value {
+    font-weight: bold; /* Texte en gras pour les valeurs */
+}
+
+/* ========== PRÉVISIONS HEBDOMADAIRES ========== */
+/* Conteneur pour les prévisions de la semaine */
+.weather-week {
+    display: flex; /* Flexbox pour l'alignement */
+    flex-wrap: wrap; /* Passage à la ligne si nécessaire */
+    justify-content: center; /* Centrage horizontal */
+    gap: 20px; /* Espacement entre les cartes */
+    margin: 40px 20px; /* Marge extérieure */
+}
+
+/* Style des cartes de prévisions hebdomadaires */
+.weather-cardWeek {
+    flex: 1 1 calc(33.33333333333333% - 20px); /* Flex-grow, flex-shrink, flex-basis */
+    width: 300px; /* Largeur fixe */
+    height: 350px; /* Hauteur fixe */
+    padding: 15px; /* Espacement intérieur */
+    background-color: #ffffff; /* Fond blanc */
+    border-radius: 8px; /* Coins arrondis */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Ombre portée */
+    text-align: center; /* Centrage du texte */
+    display: flex; /* Flexbox pour l'organisation */
+    flex-direction: column; /* Colonne verticale */
+    justify-content: space-between; /* Répartition de l'espace */
+    box-sizing: border-box; /* Prise en compte du padding */
+    overflow-y: auto; /* Défilement vertical si nécessaire */
+}
+
+/* ========== MÉDIAS QUERIES ========== */
+/* Pour les tablettes (largeur max 992px) */
 @media (max-width: 992px) {
-    /* Tablette : 2 cartes par ligne */
     .weather-cardWeek {
-        flex: 1 1 calc(50% - 20px);
+        flex: 1 1 calc(50% - 20px); /* 2 cartes par ligne */
     }
 }
 
+/* Pour les mobiles (largeur max 620px) */
 @media (max-width: 620px) {
-    /* Mobile : 1 carte par ligne */
     .weather-cardWeek {
-        flex: 1 1 100%;
+        flex: 1 1 100%; /* 1 carte par ligne */
     }
     .weather-data {
-        display: flex;
+        display: flex; /* Passage en colonne pour les petits écrans */
         flex-direction: column;
     }
 }
-/* 🏷️ Style optionnel : les titres des cartes (par exemple "Lundi", "Mardi", etc.) */
+
+/* ========== STYLES SPÉCIFIQUES ========== */
+/* Style des titres des cartes */
 .weather-cardWeek h3, .weather-cardToday h3 {
-    color: #007BFF; /* Bleu clair (accentué) */
-    font-size: 1.2em; /* Taille du texte un peu plus grande */
-    margin-bottom: 10px; /* Espace en dessous du titre */
-    font-weight: bold;
+    color: #007BFF; /* Couleur bleue pour les titres */
+    font-size: 1.2em; /* Taille de police légèrement plus grande */
+    margin-bottom: 10px; /* Marge inférieure */
+    font-weight: bold; /* Texte en gras */
 }
 
-/* 🌗 Style optionnel : fond alterné sur une carte sur deux pour la lisibilité */
+/* Alternance de couleur pour les cartes paires */
 .weather-week .weather-cardWeek:nth-child(even) {
-    background-color: #ededed; /* Fond gris très clair sur les cartes paires */
+    background-color: #ededed; /* Fond gris clair pour les cartes paires */
 }
 
-/* 🌦️ Icône météo : image représentant les conditions météo (soleil, pluie, etc.) */
+/* Style des icônes météo */
 .icon {
-    width: 90px !important;  /* Largeur fixe des icônes (prioritaire avec !important) */
-    height: auto !important; /* Garde le ratio hauteur/largeur d’origine */
-    display: block; /* Empêche les marges automatiques d’être ignorées */
-    margin: 0 auto; /* Centre l’image horizontalement */
+    width: 90px !important;  /* Largeur fixe (prioritaire) */
+    height: auto !important; /* Maintien du ratio */
+    display: block; /* Comportement de bloc */
+    margin: 0 auto; /* Centrage horizontal */
 }
 
-
-.search{
-    margin-top: 50px;
+/* Espacement pour la zone de recherche */
+.search {
+    margin-top: 50px; /* Marge supérieure importante */
 }
 
-.temp-cold{
-    color: rgb(0, 102, 204);
+/* Classes de couleur pour les températures */
+.temp-cold {
+    color: rgb(0, 102, 204); /* Bleu pour le froid */
 }
-.temp-warm{
-    color: rgb(0, 120, 0);
+.temp-warm {
+    color: rgb(0, 120, 0); /* Vert pour le doux */
 }
-.temp-hot{
-    color: rgb(193, 18, 31);
+.temp-hot {
+    color: rgb(193, 18, 31); /* Rouge pour le chaud */
 }
 
-button{
-border-radius: 5px;   
-background-color: #007BFF; 
-border: none;
-padding: 10px 15px;
-font-weight: bold;
-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+/* Style des boutons */
+button {
+    border-radius: 5px;   /* Coins arrondis */
+    background-color: #007BFF; /* Fond bleu */
+    border: none; /* Pas de bordure */
+    padding: 10px 15px; /* Espacement interne */
+    font-weight: bold; /* Texte en gras */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Ombre portée */
 }
-button:hover{
-    background-color: #3947df;
+
+/* Effet de survol des boutons */
+button:hover {
+    background-color: #3947df; /* Changement de couleur au survol */
 }
-input{
-    border-radius: 5px;
-    border: none;
-    padding: 10px 15px;
-    font-weight: bold;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+/* Style des champs de saisie */
+input {
+    border-radius: 5px; /* Coins arrondis */
+    border: none; /* Pas de bordure */
+    padding: 10px 15px; /* Espacement interne */
+    font-weight: bold; /* Texte en gras */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Ombre portée */
 }
