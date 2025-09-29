@@ -128,5 +128,7 @@
 {# Section JavaScript #}
 {% block javascripts %}
     {{ parent() }}
+    <script src="{{ asset('js/geolocalisation.js') }}"></script>
     <script src="{{ asset('js/meteo.js') }}"></script>
+    
 {% endblock %}

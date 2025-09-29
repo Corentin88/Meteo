@@ -14,10 +14,10 @@ class WeatherApiService
 {
     // Client HTTP pour effectuer des requêtes vers l'API
     private HttpClientInterface $client;
-    
+
     // Clé d'API pour s'authentifier auprès du service météo
     private string $apiKey;
-    
+
     // Service de cache pour stocker les données météo
     private CacheInterface $cache;
 
@@ -68,7 +68,7 @@ class WeatherApiService
 
             // Décodage de la réponse JSON en tableau associatif
             $locationData = json_decode($locationResponse->getContent(), true);
-            
+
             // Vérification qu'un emplacement a bien été trouvé
             if (empty($locationData)) {
                 throw new \Exception('Aucun emplacement trouvé pour cette ville');
@@ -89,5 +89,36 @@ class WeatherApiService
             // Conversion de la réponse en tableau et retour des données
             return $response->toArray();
         });
+    }
+    public function getWeatherCoord(float $lat, float $lon): array
+    {
+        if ($lat === null || $lon === null) {
+            throw new \Exception('Coordonnées manquantes');
+        }
+
+        $lat = round($lat, 4);
+        $lon = round($lon, 4);
+        $cacheKey = 'weather_coords_' . $lat . '_' . $lon;
+
+        try {
+            return $this->cache->get($cacheKey, function (ItemInterface $item) use ($lat, $lon) {
+                $item->expiresAfter(43200); // 12h
+
+                $url = "https://ai-weather-by-meteosource.p.rapidapi.com/daily?lat={$lat}&lon={$lon}&language=fr&units=metric";
+
+                $response = $this->client->request('GET', $url, [
+                    'headers' => [
+                        'x-rapidapi-host' => 'ai-weather-by-meteosource.p.rapidapi.com',
+                        'x-rapidapi-key' => $this->apiKey,
+                    ]
+                ]);
+
+                return $response->toArray();
+            });
+        } catch (\Exception $e) {
+            // On log l'erreur (optionnel) et on retourne un tableau vide pour éviter le 500
+            // Si tu as un LoggerInterface, tu peux faire : $this->logger->error($e->getMessage());
+            return [];
+        }
     }
 }
