@@ -111,6 +111,9 @@ h1, h2 {
         display: flex; /* Passage en colonne pour les petits écrans */
         flex-direction: column;
     }
+    h1, h2 {
+        font-size: 2rem;
+    }
 }
 
 /* ========== STYLES SPÉCIFIQUES ========== */
