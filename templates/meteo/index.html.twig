@@ -29,9 +29,11 @@
     <div class="container mt-2">
         <div class="col-md-6 col-lg-6">
             {# Formulaire de recherche par ville #}
-            <form action="{{ path('meteo') }}" method="GET">         
+            <form action="{{ path('meteo') }}" method="GET">        
                 <input type="text" name="ville" placeholder="Entrez une ville" value="{{ ville }}" required>
-                <button type="submit">Rechercher</button>  
+                {# Icône cliquable de géolocalisation #}
+                <span class="geo-icon" role="button" tabindex="0" aria-label="Utiliser ma position" title="Utiliser ma position">🎯</span>     
+                <button type="submit">Rechercher</button> 
             </form>
         </div>
     </div>

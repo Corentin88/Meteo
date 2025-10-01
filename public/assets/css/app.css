@@ -138,10 +138,7 @@ h1, h2 {
     margin: 0 auto; /* Centrage horizontal */
 }
 
-/* Espacement pour la zone de recherche */
-.search {
-    margin-top: 50px; /* Marge supérieure importante */
-}
+
 
 /* Classes de couleur pour les températures */
 .temp-cold {
@@ -156,6 +153,7 @@ h1, h2 {
 
 /* Style des boutons */
 button {
+    
     border-radius: 5px;   /* Coins arrondis */
     background-color: #007BFF; /* Fond bleu */
     border: none; /* Pas de bordure */
@@ -176,4 +174,23 @@ input {
     padding: 10px 15px; /* Espacement interne */
     font-weight: bold; /* Texte en gras */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Ombre portée */
+}
+
+
+input {
+    position: relative;
+    
+}
+
+.geo-icon {
+    position: absolute;
+   transform: translateX(-110%);
+    font-size: 1.6rem;
+    opacity: 0.7;
+    transition: opacity 0.2s ease
+}
+
+.geo-icon:hover {
+    opacity: 1;
+    
 }
