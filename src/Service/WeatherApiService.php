@@ -90,7 +90,7 @@ class WeatherApiService
             return $response->toArray();
         });
     }
-    public function getWeatherCoord(float $lat, float $lon): array
+    public function getWeatherCoord(?float $lat, ?float $lon): array
     {
         if ($lat === null || $lon === null) {
             throw new \Exception('Coordonnées manquantes');
