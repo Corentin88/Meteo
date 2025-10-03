@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Limite atteinte{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="alert alert-warning">
+            <h2>🚦 Trop de requêtes</h2>
+            <p>Vous avez effectué trop de recherches en peu de temps.</p>
+            <p>Veuillez réessayer dans <strong>{{ retry_after|date('i') }}</strong> minute(s).</p>
+        </div>
+    </div>
+{% endblock %}

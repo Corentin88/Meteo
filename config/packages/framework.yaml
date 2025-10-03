@@ -3,11 +3,42 @@ framework:
     secret: '%env(APP_SECRET)%'
 
     # Note that the session will be started ONLY if you read or write from it.
-    session: true
-
+    # HTTPS uniquement en production
+    # Pas d'accès JavaScript
+    # Protection CSRF
+    # 1 heure
+    session:
+        cookie_secure: auto  
+        cookie_httponly: true  
+        cookie_samesite: lax  
+        cookie_lifetime: 3600  
+                
+    # CSRF tokens activés
+    csrf_protection: 
+        enabled: true
+            
+    # Headers de sécurité
+    http_method_override: false
     #esi: true
     #fragments: true
-
+    rate_limiter:
+            # Limite par IP pour les recherches météo
+            weather_search:
+                policy: 'sliding_window'
+                limit: 20  # 20 requêtes
+                interval: '1 minute'
+            
+            # Limite pour l'API externe (éviter de dépasser les quotas)
+            api_calls:
+                policy: 'token_bucket'
+                limit: 100
+                rate: { interval: '1 hour', amount: 100 }
+            
+            # Limite stricte pour la géolocalisation
+            geolocation:
+                policy: 'fixed_window'
+                limit: 10
+                interval: '5 minutes'
 when@test:
     framework:
         test: true

@@ -32,22 +32,15 @@ class WeatherDataRepository extends ServiceEntityRepository
      * @return WeatherData[] Un tableau d'objets WeatherData triés par date croissante
      */
     public function findWeatherDataFromToday(string $city, \DateTimeInterface $today): array
-    {
-        // Création d'un constructeur de requête pour l'entité WeatherData (alias 'w')
-        $existingData = $this->createQueryBuilder('w')
-            // Filtre sur le nom de la ville (correspondance exacte)
-            ->where('w.city = :city')
-            // Filtre pour ne récupérer que les données à partir d'aujourd'hui
-            ->andWhere('w.day >= :today')
-            // Définition des paramètres de la requête
-            ->setParameter('city', $city)
-            ->setParameter('today', $today->format('Y-m-d'))
-            // Tri par date croissante
-            ->orderBy('w.day', 'ASC')
-            // Exécution de la requête et récupération des résultats
-            ->getQuery()
-            ->getResult();
-
-        return $existingData;
-    }
+{
+    // TOUJOURS utiliser setParameter, JAMAIS de concaténation
+    return $this->createQueryBuilder('w')
+        ->where('w.city = :city')
+        ->andWhere('w.day >= :today')
+        ->setParameter('city', $city)  // Doctrine échappe automatiquement
+        ->setParameter('today', $today)
+        ->orderBy('w.day', 'ASC')
+        ->getQuery()
+        ->getResult();
+}
 }
