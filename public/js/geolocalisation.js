@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Fonction pour rediriger avec coords ou fallback
   function redirect(lat, lon) {
     if (lat && lon) {
-      window.location.href = `/meteo/?lat=${lat}&lon=${lon}`;
+      window.location.href = `/?lat=${lat}&lon=${lon}`;
     } else if (!params.has("ville") && !params.has("lat") && !params.has("lon")) {
       // fallback Nancy
       window.location.href = "/?ville=Nancy";
